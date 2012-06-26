@@ -1,34 +1,21 @@
 import dryscrape
 
-# set up a web scraping session
-sess = dryscrape.Session(base_url = 'http://www.informatik.uni-trier.de')
-#sess = dryscrape.Session(base_url = 'http://www.dblp.org')
+class Dblp():
+    def __init__(self):
+        self.sess = dryscrape.Session(base_url = 'http://www.informatik.uni-trier.de', port = 50001)
+        self.sess.set_error_tolerant(True)
+        self.sess.set_attribute('auto_load_images', False)
+        self.sess.visit('/~ley/db/indices/a-tree/index.html')
 
-# there are some failing HTTP requests, so we need to enter
-# a more error-resistant mode (like real browsers do)
-sess.set_error_tolerant(True)
+    def work(self, search_term):
+        q = self.sess.at_xpath('//*[@name="author"]')
+        q.set(search_term)
+        q.form().submit()
 
-# we don't need images
-sess.set_attribute('auto_load_images', False)
+        print self.sess.body()
 
-# visit homepage and search for a term
-sess.visit('/~ley/db/indices/a-tree/index.html')
-#sess.visit('/search/index.php')
+        #for link in sess.xpath('//a[@href]'):
+        #  print link['href']
 
-# save a screenshot of the web page
-sess.render('dblp.png')
-print "Screenshot written to 'dblp.png'"
-
-q = sess.at_xpath('//*[@name="author"]')
-#q = sess.at_xpath('//*[@name="query"]')
-search_term = 'Giuseppe Vizzari'
-q.set(search_term)
-q.form().submit()
-
-# extract all links
-for link in sess.xpath('//a[@href]'):
-  print link['href']
-
-# save a screenshot of the web page
-sess.render('dblp.png')
-print "Screenshot written to 'dblp.png'"
+        #sess.render('scholar.png')
+        #print "Screenshot written to 'scholar.png'"

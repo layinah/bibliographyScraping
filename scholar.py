@@ -1,26 +1,22 @@
 import dryscrape
 
-# set up a web scraping session
-sess = dryscrape.Session(base_url = 'http://scholar.google.com')
+class Scholar():
+    def __init__(self):
+        self.sess = dryscrape.Session(base_url = 'http://scholar.google.com', port = 50002)
+        self.sess.set_error_tolerant(True)
+        self.sess.set_attribute('auto_load_images', False)
+        self.sess.visit('/')
 
-# there are some failing HTTP requests, so we need to enter
-# a more error-resistant mode (like real browsers do)
-sess.set_error_tolerant(True)
+    def work(self, search_term):
+        q = self.sess.at_xpath('//*[@name="q"]')
+        print q
+        q.set(search_term)
+        q.form().submit()
 
-# we don't need images
-sess.set_attribute('auto_load_images', False)
+        print self.sess.body()
 
-# visit homepage and search for a term
-sess.visit('/')
-q = sess.at_xpath('//*[@name="q"]')
-search_term = 'Giuseppe Vizzari'
-q.set(search_term)
-q.form().submit()
+        #for link in sess.xpath('//a[@href]'):
+        #  print link['href']
 
-# extract all links
-for link in sess.xpath('//a[@href]'):
-  print link['href']
-
-# save a screenshot of the web page
-sess.render('scholar.png')
-print "Screenshot written to 'scholar.png'"
+        #sess.render('scholar.png')
+        #print "Screenshot written to 'scholar.png'"
