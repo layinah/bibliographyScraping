@@ -14,4 +14,3 @@ class Crawler():
         q = qs[0]
         q.set(search_term)
         q.form().submit()
-        return self.sess.body()

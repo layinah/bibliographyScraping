@@ -15,7 +15,7 @@ else:
     dblp.visit('/~ley/db/indices/a-tree/index.html')
     dblp.search('//*[@name="author"]', search_term)
 
-trs = dblp.sess.xpath('//body/table/tbody/tr')
+trs = dblp.sess.xpath('//p[1]/table/tbody/tr')
 print trs
 
 for tr in trs:
